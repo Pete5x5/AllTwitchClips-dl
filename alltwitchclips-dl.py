@@ -21,9 +21,9 @@ os.chdir(mainPath)  # change working directory to the clips folder
 # LOGGING------
 
 baseurl = 'https://api.twitch.tv/helix/clips'  # URL for Twitch API (version helix)
-numclips = 2  # number of clips per page, max 100
+numclips = 64  # number of clips per page, max 100
 pagval = ''  # set pagination value to nothing by default
-toPag = 0  # whether or not you want to paginate (default 1 = yes)
+toPag = 1  # whether or not you want to paginate (default 1 = yes)
 headers = {'redirect_uri': redUri, 'Client-ID': cID, 'Authorization': 'Bearer ' + authCode}  # headers for API request
 urls = []  # make urls variable a list
 
