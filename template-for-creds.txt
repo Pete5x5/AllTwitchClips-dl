@@ -1,0 +1,3 @@
+*CLIENT-ID-HERE* (ex. 1234abcd1234abcd1234abcd1234ab)
+*AUTH-CODE-HERE* (ex. 5678qrst5678qrst5678qrst5678qr)
+*REDIRECT-URI-HERE* (ex. http://localhost)
