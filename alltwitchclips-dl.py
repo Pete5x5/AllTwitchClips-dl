@@ -5,6 +5,18 @@ import os                       # Enable filesystem functionality
 from pathlib import Path        # Enable filesystem path joining
 import logging                  # Enable logging
 
+configDict = dict()
+configList = [line.strip().split(' = ') for line in open('config.txt')]  # pull run parameters from config.txt
+for c1 in range(len(configList)):
+    try:
+        configDict[configList[c1][0]] = int(configList[c1][1])
+    except (IndexError, ValueError):
+        continue
+numClips = configDict.setdefault('number-of-clips', '64')  # number of clips per page, max 100, default 64
+toPag = configDict.setdefault('pagination', '1')  # whether or not you want to paginate (default 1 = yes)
+bID = configDict.setdefault('broadcaster-id', '84842346')  # broadcaster ID to find clips for
+toLOG = configDict.setdefault('logging', '0')  # enable logging?  default = 0 (no logging)
+
 creds = [line.strip() for line in open('creds.txt')]  # pull Twitch API credentials from creds.txt
 cID = creds[0]  # Client ID from creds.txt
 authCode = creds[1]  # Auth Code from creds.txt
@@ -15,30 +27,28 @@ logPath = mainPath/'logs'  # path to the logs folder
 
 os.chdir(mainPath)  # change working directory to the clips folder
 
-# LOGGING------
-# gendate = (datetime.datetime.now()).strftime('%Y%m%d-%H%M%S')  # set the date and time to be added to log file
-# logging.basicConfig(filename=str(logPath) + '/cliplog' + gendate + '.txt', level=logging.DEBUG, format='%(asctime)s -  %(levelname)s -  %(message)s')
-# LOGGING------
+if toLOG == 1:
+    gendate = (datetime.datetime.now()).strftime('%Y%m%d-%H%M%S')  # set the date and time to be added to log file
+    logging.basicConfig(filename=str(logPath) + '/cliplog' + gendate + '.txt', level=logging.DEBUG, format='%(asctime)s -  %(levelname)s -  %(message)s')  # enable logging and save the log in the logPath
 
-baseurl = 'https://api.twitch.tv/helix/clips'  # URL for Twitch API (version helix)
-numclips = 64  # number of clips per page, max 100
-pagval = ''  # set pagination value to nothing by default
-toPag = 1  # whether or not you want to paginate (default 1 = yes)
+baseURL = 'https://api.twitch.tv/helix/clips'  # URL for Twitch API (version helix)
+pagVal = ''  # set pagination value to nothing by default
+
 headers = {'redirect_uri': redUri, 'Client-ID': cID, 'Authorization': 'Bearer ' + authCode}  # headers for API request
 urls = []  # make urls variable a list
 
 while True:
-    payload = {'broadcaster_id': '84842346', 'first': numclips, 'after': pagval}  # payload for API request
-    r = requests.get(baseurl, headers=headers, params=payload)  # sends request to Twitch API using the base URL, headers, and payload
+    payload = {'broadcaster_id': bID, 'first': numClips, 'after': pagVal}  # payload for API request
+    r = requests.get(baseURL, headers=headers, params=payload)  # sends request to Twitch API using the base URL, headers, and payload
     resp = dict(r.json())  # get response in JSON format
-    resppag = resp.get('pagination')  # get pagination info
-    respdata = resp.get('data')  # get all clip data
+    respPag = resp.get('pagination')  # get pagination info
+    respData = resp.get('data')  # get all clip data
 
-    for x in range(len(respdata)):  # for each clip...
-        datadict = dict(respdata[x])  # gets the first clip entry in dictionary format
-        urls += [datadict['url']]  # find the URL for the clip
-    if 'cursor' in resppag.keys() and toPag == 1:  # if there is a pagination value and pagination is enabled...
-        pagval = resppag['cursor']  # set the pagination value and run again
+    for x in range(len(respData)):  # for each clip...
+        dataDict = dict(respData[x])  # gets the first clip entry in dictionary format
+        urls += [dataDict['url']]  # find the URL for the clip
+    if 'cursor' in respPag.keys() and toPag == 1:  # if there is a pagination value and pagination is enabled...
+        pagVal = respPag['cursor']  # set the pagination value and run again
     else:
         break
 
