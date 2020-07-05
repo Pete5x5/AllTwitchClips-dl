@@ -13,9 +13,15 @@ for c1 in range(len(configList)):
     except (IndexError, ValueError):
         continue
 numClips = configDict.setdefault('number-of-clips', '64')  # number of clips per page, max 100, default 64
+if numClips > 100:
+    numClips == 100
 toPag = configDict.setdefault('pagination', '1')  # whether or not you want to paginate (default 1 = yes)
+if toPag != 0 and toPag != 1:
+    toPag = 1
 bID = configDict.setdefault('broadcaster-id', '84842346')  # broadcaster ID to find clips for
 toLOG = configDict.setdefault('logging', '0')  # enable logging?  default = 0 (no logging)
+if toLOG != 0 and toLOG != 1:
+    toLOG = 0
 
 creds = [line.strip() for line in open('creds.txt')]  # pull Twitch API credentials from creds.txt
 cID = creds[0]  # Client ID from creds.txt
