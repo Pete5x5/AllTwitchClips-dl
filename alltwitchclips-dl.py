@@ -14,7 +14,7 @@ for c1 in range(len(configList)):
         continue
 numClips = configDict.setdefault('number-of-clips', '64')  # number of clips per page, max 100, default 64
 if numClips > 100:
-    numClips == 100
+    numClips = 100
 toPag = configDict.setdefault('pagination', '1')  # whether or not you want to paginate (default 1 = yes)
 if toPag != 0 and toPag != 1:
     toPag = 1
