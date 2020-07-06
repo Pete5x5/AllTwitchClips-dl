@@ -78,12 +78,12 @@ if clipLog == 1:  # if clip logging enabled
 else:
     getURL = urls  # if clip logging is not anables just use all urls found
 
-runFlags = ['python', '-m', 'youtube_dl', 'CLIPURLHERE']
-runFlags.extend(ytdlFlags)
+runFlags = ['python', '-m', 'youtube_dl', 'CLIPURLHERE']  # default subprocess to run youtube-dl with clip URL
+runFlags.extend(ytdlFlags)  # additional flags for youtube-dl from config file
 
 for x2 in range(len(getURL)):  # for each URL...
     print(getURL[x2])  # print the URL of the clip to be downloaded
-    runFlags[3] = getURL[x2]
+    runFlags[3] = getURL[x2]  # update the run flags with the clip URL
     ytDL = subprocess.Popen(runFlags)  # subprocess to run youtube-dl with the clip URL
     ytDL.wait()  # launch the subprocess, wait for it to finish before continuing
     if clipLog == 1:  # if clip logging enabled
