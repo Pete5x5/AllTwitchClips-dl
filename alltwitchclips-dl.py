@@ -19,9 +19,12 @@ toPag = configDict.setdefault('pagination', '1')  # whether or not you want to p
 if toPag != 0 and toPag != 1:
     toPag = 1
 bID = configDict.setdefault('broadcaster-id', '84842346')  # broadcaster ID to find clips for
-toLOG = configDict.setdefault('logging', '0')  # enable logging?  default = 0 (no logging)
-if toLOG != 0 and toLOG != 1:
-    toLOG = 0
+errLog = configDict.setdefault('error-logging', '0')  # enable error logging?  default = 0 (no logging)
+if errLog != 0 and errLog != 1:
+    errLog = 0
+clipLog = configDict.setdefault('clip-logging', '1')  # enable clip logging?  default = 1 (log videos, do not attempt to download anything from a URL already in the log)
+if clipLog != 0 and clipLog != 1:
+    clipLog = 0
 
 creds = [line.strip() for line in open('creds.txt')]  # pull Twitch API credentials from creds.txt
 cID = creds[0]  # Client ID from creds.txt
@@ -29,13 +32,12 @@ authCode = creds[1]  # Auth Code from creds.txt
 redUri = creds[2]  # redirect uri from creds.txt
 
 mainPath = Path(r"K:\media\Twitch\GordyKegs\Clips")  # path to the clips folder
-logPath = mainPath/'logs'  # path to the logs folder
-
+errorLogPath = mainPath/'error-logs'  # path to the logs folder
 os.chdir(mainPath)  # change working directory to the clips folder
 
-if toLOG == 1:
+if errLog == 1:
     gendate = (datetime.datetime.now()).strftime('%Y%m%d-%H%M%S')  # set the date and time to be added to log file
-    logging.basicConfig(filename=str(logPath) + '/cliplog' + gendate + '.txt', level=logging.DEBUG, format='%(asctime)s -  %(levelname)s -  %(message)s')  # enable logging and save the log in the logPath
+    logging.basicConfig(filename=str(errorLogPath) + '/clipErrorLog' + gendate + '.txt', level=logging.DEBUG, format='%(asctime)s -  %(levelname)s -  %(message)s')  # enable logging and save the log in the errorLogPath
 
 baseURL = 'https://api.twitch.tv/helix/clips'  # URL for Twitch API (version helix)
 pagVal = ''  # set pagination value to nothing by default

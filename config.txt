@@ -1,4 +1,5 @@
 number-of-clips = 64
 pagination = 1
 broadcaster-id = 84842346
-logging = 0
+error-logging = 0
+clip-logging = 1
