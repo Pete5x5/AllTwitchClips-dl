@@ -26,13 +26,15 @@ if errLog != 0 and errLog != 1:  # check to make sure the value is 0 or 1
 clipLog = int(configDict.setdefault('clip-logging', '1'))  # enable clip logging?  default = 1 (log videos, do not attempt to download anything from a URL already in the log)
 if clipLog != 0 and clipLog != 1:  # check to make sure the value is 0 or 1
     clipLog = 1
+dlPath = configDict.setdefault('download-path', r'K:\media\Twitch\GordyKegs\Clips')  # path to save clips to
+ytdlFlags = configDict.setdefault('ytdl-flags', '')  # flags for youtube-dl
 
 creds = [line.strip() for line in open('creds.txt')]  # pull Twitch API credentials from creds.txt
 cID = creds[0]  # Client ID from creds.txt
 authCode = creds[1]  # Auth Code from creds.txt
 redUri = creds[2]  # redirect uri from creds.txt
 
-mainPath = Path(r"K:\media\Twitch\GordyKegs\Clips")  # path to the clips folder
+mainPath = Path(dlPath)  # path to the clips folder
 errorLogPath = mainPath/'error-logs'  # path to the logs folder
 os.chdir(mainPath)  # change working directory to the clips folder
 
@@ -76,10 +78,10 @@ if clipLog == 1:  # if clip logging enabled
 else:
     getURL = urls  # if clip logging is not anables just use all urls found
 
-for x2 in range(len(getURL)):  # for each URL...
-    print(getURL[x2])  # print the URL of the clip to be downloaded
-    ytDL = subprocess.Popen(['python', '-m', 'youtube_dl', getURL[x2], '-c', '-i', '--restrict-filenames', '--download-archive', 'gordy-vids', "-o'%(id)s_[]_%(title)s.%(ext)s'"])  # subprocess to run youtube-dl with the clip URL
-    ytDL.wait()  # launch the subprocess, wait for it to finish before continuing
-    if clipLog == 1:  # if clip logging enabled
-        clipLogFile.write(getURL[x2] + '\n')  # append the url to the clip log file
-        print('wrote to file ' + getURL[x2])  # for debugging
+# for x2 in range(len(getURL)):  # for each URL...
+#     print(getURL[x2])  # print the URL of the clip to be downloaded
+#     ytDL = subprocess.Popen(['python', '-m', 'youtube_dl', getURL[x2], '-c', '-i', '--restrict-filenames', '--download-archive', 'gordy-vids', "-o'%(id)s_[]_%(title)s.%(ext)s'"])  # subprocess to run youtube-dl with the clip URL
+#     ytDL.wait()  # launch the subprocess, wait for it to finish before continuing
+#     if clipLog == 1:  # if clip logging enabled
+#         clipLogFile.write(getURL[x2] + '\n')  # append the url to the clip log file
+#         print('wrote to file ' + getURL[x2])  # for debugging
