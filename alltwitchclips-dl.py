@@ -27,7 +27,7 @@ clipLog = int(configDict.setdefault('clip-logging', '1'))  # enable clip logging
 if clipLog != 0 and clipLog != 1:  # check to make sure the value is 0 or 1
     clipLog = 1
 dlPath = configDict.setdefault('download-path', r'K:\media\Twitch\GordyKegs\Clips')  # path to save clips to
-ytdlFlags = configDict.setdefault('ytdl-flags', '')  # flags for youtube-dl
+ytdlFlags = configDict.setdefault('ytdl-flags', '').split(" ")  # flags for youtube-dl, split the string taken from the dictionary value into a list
 
 creds = [line.strip() for line in open('creds.txt')]  # pull Twitch API credentials from creds.txt
 cID = creds[0]  # Client ID from creds.txt
@@ -78,10 +78,14 @@ if clipLog == 1:  # if clip logging enabled
 else:
     getURL = urls  # if clip logging is not anables just use all urls found
 
-# for x2 in range(len(getURL)):  # for each URL...
-#     print(getURL[x2])  # print the URL of the clip to be downloaded
-#     ytDL = subprocess.Popen(['python', '-m', 'youtube_dl', getURL[x2], '-c', '-i', '--restrict-filenames', '--download-archive', 'gordy-vids', "-o'%(id)s_[]_%(title)s.%(ext)s'"])  # subprocess to run youtube-dl with the clip URL
-#     ytDL.wait()  # launch the subprocess, wait for it to finish before continuing
-#     if clipLog == 1:  # if clip logging enabled
-#         clipLogFile.write(getURL[x2] + '\n')  # append the url to the clip log file
-#         print('wrote to file ' + getURL[x2])  # for debugging
+runFlags = ['python', '-m', 'youtube_dl', 'CLIPURLHERE']
+runFlags.extend(ytdlFlags)
+
+for x2 in range(len(getURL)):  # for each URL...
+    print(getURL[x2])  # print the URL of the clip to be downloaded
+    runFlags[3] = getURL[x2]
+    ytDL = subprocess.Popen(runFlags)  # subprocess to run youtube-dl with the clip URL
+    ytDL.wait()  # launch the subprocess, wait for it to finish before continuing
+    if clipLog == 1:  # if clip logging enabled
+        clipLogFile.write(getURL[x2] + '\n')  # append the url to the clip log file
+        print('wrote to file ' + getURL[x2])  # for debugging

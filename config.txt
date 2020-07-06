@@ -3,5 +3,5 @@ pagination = 1
 broadcaster-id = 84842346
 error-logging = 0
 clip-logging = 1
-download-path: K:\media\Twitch\GordyKegs\Clips
-ytdl-flags: 
+download-path = K:\media\Twitch\GordyKegs\Clips
+ytdl-flags = -c -i --restrict-filenames --download-archive gordy-vids -o'%(id)s_[]_%(title)s.%(ext)s'
